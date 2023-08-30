@@ -522,6 +522,7 @@ query PageQuery($url: String!) {
 
     featured_blogs.featured_blogs.forEach((blog: any) => {
       blog.body = temp.jsons.shift();
+      blog.featured_image = blog.featured_imageConnection.edges[0].node;
     });
   }
 
