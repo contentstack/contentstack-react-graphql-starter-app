@@ -484,7 +484,7 @@ query PageQuery($url: String!) {
 
     const temp = {
       uid: "temp_uid_to_fool",
-      jsons: [],
+      jsons: jsons,
     };
 
     Utils.jsonToHTML({
