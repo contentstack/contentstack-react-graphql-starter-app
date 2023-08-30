@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Header from "./header";
 import Footer from "./footer";
 import DevTools from "./devtools";
-import { getHeaderRes, getFooterRes, getAllEntries } from "../helper";
+import { getHeaderRes, getFooterRes } from "../helper";
 import { onEntryChange } from "../sdk/entry";
 import { EntryProps } from "../typescript/components";
 import { FooterRes, HeaderRes, NavigationMenu } from "../typescript/response";
@@ -30,34 +30,9 @@ export default function Layout({ entry }: { entry: EntryProps }) {
     try {
       const header = await getHeaderRes();
       const footer = await getFooterRes();
-      const allEntry = await getAllEntries();
       !header || (!footer && setError(true));
       const navHeaderList = header.navigation_menu;
       const navFooterList = footer.navigation.link;
-      if (allEntry.length !== header.navigation_menu.length) {
-        allEntry.forEach((entry) => {
-          const hFound = header.navigation_menu.find(
-            (navLink) => navLink.label === entry.title
-          );
-          if (!hFound) {
-            navHeaderList.push({
-              label: entry.title,
-              page_reference: [
-                { title: entry.title, url: entry.url, uid: entry.uid },
-              ],
-            });
-          }
-          const fFound = footer.navigation.link.find(
-            (link) => link.title === entry.title
-          );
-          if (!fFound) {
-            navFooterList.push({
-              title: entry.title,
-              href: entry.url
-            });
-          }
-        });
-      }
 
       setLayout({
         header: header,

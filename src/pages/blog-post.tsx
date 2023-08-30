@@ -7,12 +7,15 @@ import ArchiveRelative from "../components/archive-relative";
 import RenderComponents from "../components/render-components";
 import { getPageRes, getBlogPostRes } from "../helper";
 import Skeleton from "react-loading-skeleton";
-import { useLivePreviewCtx } from "../context/live-preview-context-provider";
 import { BlogPostRes, Page } from "../typescript/pages";
 import { EntryProps } from "../typescript/components";
+import { onEntryChange } from "../sdk/entry";
 
-export default function BlogPost({entry}:{entry:({page, blogPost}:EntryProps)=> void}) {
-  const lpTs = useLivePreviewCtx();
+export default function BlogPost({
+  entry,
+}: {
+  entry: ({ page, blogPost }: EntryProps) => void;
+}) {
   const { blogId } = useParams();
   const history = useNavigate();
   const [getEntry, setEntry] = useState({
@@ -36,9 +39,9 @@ export default function BlogPost({entry}:{entry:({page, blogPost}:EntryProps)=> 
   }
 
   useEffect(() => {
-    fetchData();
+    onEntryChange(fetchData);
     error && history("/404");
-  }, [blogId, lpTs, error]);
+  }, []);
 
   const { post, banner } = getEntry;
   return (
@@ -47,7 +50,7 @@ export default function BlogPost({entry}:{entry:({page, blogPost}:EntryProps)=> 
         <RenderComponents
           pageComponents={banner.page_components}
           blogsPage
-          contentTypeUid='blog_post'
+          contentTypeUid="blog_post"
           entryUid={banner.uid}
           locale={banner.locale}
         />
@@ -55,8 +58,8 @@ export default function BlogPost({entry}:{entry:({page, blogPost}:EntryProps)=> 
         <Skeleton height={400} />
       )}
 
-      <div className='blog-container'>
-        <article className='blog-detail'>
+      <div className="blog-container">
+        <article className="blog-detail">
           {post.title ? (
             <h2 {...(post.$?.title as {})}>{post.title}</h2>
           ) : (
@@ -82,8 +85,8 @@ export default function BlogPost({entry}:{entry:({page, blogPost}:EntryProps)=> 
             <Skeleton height={800} width={600} />
           )}
         </article>
-        <div className='blog-column-right'>
-          <div className='related-post'>
+        <div className="blog-column-right">
+          <div className="related-post">
             {Object.keys(banner).length && banner.page_components[2].widget ? (
               <h2 {...(banner?.page_components[2].widget.$?.title_h2 as {})}>
                 {banner?.page_components[2].widget.title_h2}

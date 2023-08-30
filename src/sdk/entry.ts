@@ -56,7 +56,7 @@ ContentstackLivePreview.init({
 
 export const { onEntryChange } = ContentstackLivePreview;
 
-const renderOption = {
+export const renderOption = {
   span: (node: any, next: any) => next(node.children),
 };
 
