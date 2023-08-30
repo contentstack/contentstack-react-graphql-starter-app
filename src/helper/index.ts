@@ -435,8 +435,6 @@ query PageQuery($url: String!) {
 }
 `;
 
-  console.log(final);
-
   const res = await gqlRequest(final, {
     variables: {
       url: entryUrl,
