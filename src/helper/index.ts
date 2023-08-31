@@ -597,31 +597,18 @@ query BlogListQuery {
   const archivedBlogs = [] as BlogPostRes[];
   const recentBlogs = [] as BlogPostRes[];
 
-  const jsons = [] as any[];
-
   blogs.forEach((blog: any) => {
     if (blog.is_archived) {
       archivedBlogs.push(blog);
     } else {
       recentBlogs.push(blog);
     }
-
-    jsons.push(blog.body.json);
   });
 
-  const temp = {
-    uid: "temp_uid_to_fool",
-    jsons: jsons,
-  };
-
-  Utils.jsonToHTML({
-    entry: temp,
-    paths: ["jsons"],
+  Utils.GQL.jsonToHTML({
+    entry: blogs,
+    paths: ["body"],
     renderOption: renderOption,
-  });
-
-  blogs.forEach((blog: any) => {
-    blog.body = temp.jsons.shift();
   });
 
   liveEdit &&
@@ -706,46 +693,10 @@ query BlogPostQuery($url: String!) {
     blog.uid = blog.system.uid;
   });
 
-  const jsons = [] as any[];
-
-  blogs.forEach((blog: any) => {
-    jsons.push(blog.body.json);
-  });
-
-  const temp = {
-    uid: "temp_uid_to_fool",
-    jsons: jsons,
-  };
-
-  Utils.jsonToHTML({
-    entry: temp,
-    paths: ["jsons"],
+  Utils.GQL.jsonToHTML({
+    entry: blogs,
+    paths: ["body", "related_post.body"],
     renderOption: renderOption,
-  });
-
-  blogs.forEach((blog: any) => {
-    blog.body = temp.jsons.shift();
-  });
-
-  const jsons2 = [] as any[];
-
-  blogs[0].related_post.forEach((blog: any) => {
-    jsons2.push(blog.body.json);
-  });
-
-  const temp2 = {
-    uid: "temp_uid_to_fool",
-    jsons: jsons2,
-  };
-
-  Utils.jsonToHTML({
-    entry: temp2,
-    paths: ["jsons"],
-    renderOption: renderOption,
-  });
-
-  blogs[0].related_post.forEach((blog: any) => {
-    blog.body = temp2.jsons.shift();
   });
 
   liveEdit && Utils.addEditableTags(blogs[0], "blog_post", true);
