@@ -470,62 +470,39 @@ query PageQuery($url: String!) {
   }
 
   if (page.page_components.find((item: any) => item.section_with_buckets)) {
-    const section_with_buckets = final_data.page_components.find(
-      (item: any) => item.section_with_buckets
-    ).section_with_buckets;
-
-    const jsons: any[] = [];
-    section_with_buckets.buckets.forEach((bucket: any) => {
-      bucket.icon = bucket.iconConnection.edges[0].node;
-      jsons.push(bucket.description.json);
-    });
-
-    const temp = {
-      uid: "temp_uid_to_fool",
-      jsons: jsons,
-    };
-
-    Utils.jsonToHTML({
-      entry: temp,
-      paths: ["jsons"],
+    Utils.GQL.jsonToHTML({
+      entry: final_data,
+      paths: ["page_components.section_with_buckets.buckets.description"],
       renderOption: renderOption,
-    });
-
-    section_with_buckets.buckets.forEach((bucket: any) => {
-      bucket.description = temp.jsons.shift();
     });
   }
 
   if (page.page_components.find((item: any) => item.from_blog)) {
-    const featured_blogs = final_data.page_components.find(
-      (item: any) => item.from_blog
-    ).from_blog;
-    const jsons: any[] = [];
-    featured_blogs.featured_blogs =
-      featured_blogs.featured_blogsConnection.edges.map((edge: any) => {
-        jsons.push(edge.node.body.json);
-        return edge.node;
-      });
-
-    const temp = {
-      uid: "temp_uid_to_fool",
-      jsons: jsons,
-    };
-
-    Utils.jsonToHTML({
-      entry: temp,
-      paths: ["jsons"],
+    Utils.GQL.jsonToHTML({
+      entry: final_data,
+      paths: [
+        "page_components.from_blog.featured_blogsConnection.edges.node.body",
+      ],
       renderOption: renderOption,
     });
 
-    featured_blogs.featured_blogs.forEach((blog: any) => {
-      blog.body = temp.jsons.shift();
+    const from_blog = final_data.page_components.find(
+      (item: any) => item.from_blog
+    ).from_blog;
+
+    from_blog.featured_blogs = from_blog.featured_blogsConnection.edges.map(
+      (edge: any) => {
+        return edge.node;
+      }
+    );
+
+    from_blog.featured_blogs.forEach((blog: any) => {
       blog.featured_image = blog.featured_imageConnection.edges[0].node;
     });
   }
 
   if (page.page_components.find((item: any) => item.section_with_cards)) {
-    // this part has not transformations
+    // this part has no transformations
   }
 
   if (page.page_components.find((item: any) => item.our_team)) {
@@ -538,14 +515,15 @@ query PageQuery($url: String!) {
   }
 
   if (page.page_components.find((item: any) => item.section_with_cards)) {
-    // this part has not transformations
+    // this part has no transformations
   }
 
   if (page.page_components.find((item: any) => item.widget)) {
-    // this part has not transformations
+    // this part has no transformations
   }
 
   if (page.page_components.find((item: any) => item.section_with_html_code)) {
+    console.log(final_data);
     const all: any[] = [];
 
     page.page_components.forEach((item: any) => {
@@ -554,15 +532,10 @@ query PageQuery($url: String!) {
       }
     });
 
-    all.forEach((section_with_html_code) => {
-      section_with_html_code.description =
-        section_with_html_code.description.json;
-
-      Utils.jsonToHTML({
-        entry: section_with_html_code,
-        paths: ["description"],
-        renderOption: renderOption,
-      });
+    Utils.GQL.jsonToHTML({
+      entry: final_data,
+      paths: ["page_components.section_with_html_code.description"],
+      renderOption: renderOption,
     });
   }
 
