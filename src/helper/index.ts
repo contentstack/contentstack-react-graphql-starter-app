@@ -523,7 +523,6 @@ query PageQuery($url: String!) {
   }
 
   if (page.page_components.find((item: any) => item.section_with_html_code)) {
-    console.log(final_data);
     const all: any[] = [];
 
     page.page_components.forEach((item: any) => {
