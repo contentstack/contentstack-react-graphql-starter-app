@@ -1,7 +1,7 @@
 [![Contentstack Logo](/public/contentstack.png)](https://www.contentstack.com/)
 
 
-# Build a Starter Website with React.js and Contentstack
+# Build a Starter Website with React.js and Contentstack using GraphQL
 
 About Contentstack: Contentstack is a headless CMS with an API-first approach that puts content at the centre. It is designed to simplify the process of publication by separating code from content.
 
@@ -30,3 +30,5 @@ Read Contentstack [docs](https://www.contentstack.com/docs/)
 Region support [docs](https://www.contentstack.com/docs/developers/selecting-region-in-contentstack-starter-apps)
 
 Learn about [React.js](https://reactjs.org/docs/getting-started.html)
+
+Learn about [GraphQL](https://graphql.org/)
