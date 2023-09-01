@@ -6,7 +6,7 @@ import { getPageRes } from "../helper";
 import Skeleton from "react-loading-skeleton";
 import { EntryProps } from "../typescript/components";
 import { Page } from "../typescript/pages";
-import { onEntryChange } from "../sdk/entry";
+import { onEntryChange } from "../utils/live-preview";
 
 export default function Home({
   entry,

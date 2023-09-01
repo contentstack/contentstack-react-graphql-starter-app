@@ -7,7 +7,7 @@ import { getBlogListRes, getPageRes } from "../helper";
 import Skeleton from "react-loading-skeleton";
 import { BlogPostRes, Page } from "../typescript/pages";
 import { EntryProps } from "../typescript/components";
-import { onEntryChange } from "../sdk/entry";
+import { onEntryChange } from "../utils/live-preview";
 
 export default function Blog({
   entry,

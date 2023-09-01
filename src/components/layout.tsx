@@ -4,7 +4,7 @@ import Header from "./header";
 import Footer from "./footer";
 import DevTools from "./devtools";
 import { getHeaderRes, getFooterRes } from "../helper";
-import { onEntryChange } from "../sdk/entry";
+import { onEntryChange } from "../utils/live-preview";
 import { EntryProps } from "../typescript/components";
 import { FooterRes, HeaderRes, NavigationMenu } from "../typescript/response";
 import { Link } from "../typescript/pages";

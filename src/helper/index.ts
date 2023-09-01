@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Utils from "@contentstack/utils";
-import { renderOption } from "../sdk/entry";
 import { FooterRes, HeaderRes } from "../typescript/response";
 import { BlogPostRes, Page } from "../typescript/pages";
 
@@ -707,4 +706,8 @@ query BlogPostQuery($url: String!) {
   liveEdit && Utils.addEditableTags(blogs[0], "blog_post", true);
 
   return blogs[0] as any;
+};
+
+export const renderOption = {
+  span: (node: any, next: any) => next(node.children),
 };
