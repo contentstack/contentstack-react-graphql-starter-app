@@ -5,10 +5,6 @@ import { BlogPostRes, Page } from "../typescript/pages";
 
 import ContentstackLivePreview from "@contentstack/live-preview-utils";
 
-const graphqlUrl = new URL(
-  `https://dev11-graphql.csnonprod.com/stacks/${process.env.REACT_APP_CONTENTSTACK_API_KEY}?environment=${process.env.REACT_APP_CONTENTSTACK_ENVIRONMENT}`
-);
-
 const GRAPHQL_HOST_NAME = process.env.REACT_APP_CONTENTSTACK_GRAPHQL_HOST_NAME;
 const LIVE_PREVIEW_HOST_NAME =
   process.env.REACT_APP_CONTENTSTACK_LIVE_PREVIEW_HOST_NAME;
@@ -16,6 +12,10 @@ const LIVE_PREVIEW_HOST_NAME =
 if (!GRAPHQL_HOST_NAME || !LIVE_PREVIEW_HOST_NAME) {
   throw new Error("Please set you .env file before running starter app");
 }
+
+const graphqlUrl = new URL(
+  `https://${GRAPHQL_HOST_NAME}/stacks/${process.env.REACT_APP_CONTENTSTACK_API_KEY}?environment=${process.env.REACT_APP_CONTENTSTACK_ENVIRONMENT}`
+);
 
 const liveEdit = process.env.REACT_APP_CONTENTSTACK_LIVE_EDIT_TAGS === "true";
 
