@@ -708,6 +708,41 @@ query BlogPostQuery($url: String!) {
   return blogs[0] as any;
 };
 
+export const getAllEntries = async (): Promise<Page[]> => {
+  const query = `
+  query AllEntries {
+    all_page {
+      total
+      items {
+        url
+        title
+        system {
+          uid
+        }
+      }
+    }
+  }
+`;
+
+  const res = await gqlRequest(query);
+  const data = await res.json();
+  const pages = data.data.all_page.items;
+
+  const transformed = pages.map((page: any) => {
+    return {
+      ...page,
+      uid: page.system.uid,
+    };
+  });
+
+  liveEdit &&
+    transformed.forEach((entry: any) =>
+      Utils.addEditableTags(entry, "page", true)
+    );
+
+  return transformed;
+};
+
 export const renderOption = {
   span: (node: any, next: any) => next(node.children),
 };
