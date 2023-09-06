@@ -41,7 +41,7 @@ export default function BlogPost({
   useEffect(() => {
     onEntryChange(fetchData);
     error && history("/404");
-  }, []);
+  }, [blogId]);
 
   const { post, banner } = getEntry;
   return (
