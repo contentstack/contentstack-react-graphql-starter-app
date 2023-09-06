@@ -480,6 +480,14 @@ query PageQuery($url: String!) {
       paths: ["page_components.section_with_buckets.buckets.description"],
       renderOption: renderOption,
     });
+
+    const section_with_buckets = final_data.page_components.find(
+      (item: any) => item.section_with_buckets
+    ).section_with_buckets;
+
+    section_with_buckets.buckets.forEach((bucket: any) => {
+      bucket.icon = bucket.iconConnection.edges[0].node;
+    });
   }
 
   if (page.page_components.find((item: any) => item.from_blog)) {
