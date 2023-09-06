@@ -587,6 +587,9 @@ query BlogListQuery {
       body {
         json
       }
+      system {
+        uid
+      }
     }
   }
 }
@@ -604,6 +607,7 @@ query BlogListQuery {
   blogs.forEach((blog: any) => {
     blog.featured_image = blog.featured_imageConnection.edges[0].node;
     blog.author = [blog.authorConnection.edges[0].node];
+    blog.uid = blog.system.uid;
   });
 
   const archivedBlogs = [] as BlogPostRes[];
