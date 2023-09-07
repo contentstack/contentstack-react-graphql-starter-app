@@ -346,10 +346,10 @@ export const getPageRes = async (entryUrl: string): Promise<Page> => {
                     }
                     body {
                       json
-                      system {
-                        uid
-                        content_type_uid
-                      }
+                    }
+                    system {
+                      uid
+                      content_type_uid
                     }
                   }
                 }
