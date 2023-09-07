@@ -92,6 +92,10 @@ query HeaderQuery {
               ... on Page {
                 title
                 url
+                system {
+                  uid
+                  content_type_uid
+                }
               }
             }
           }
@@ -122,9 +126,11 @@ query HeaderQuery {
     logo: header.logoConnection.edges[0].node,
     navigation_menu: header.navigation_menu.map((item: any) => ({
       ...item,
-      page_reference: item.page_referenceConnection.edges.map(
-        (edge: any) => edge.node
-      ),
+      page_reference: item.page_referenceConnection.edges.map((edge: any) => ({
+        ...edge.node,
+        uid: edge.node.system.uid,
+        _content_type_uid: edge.node.system.content_type_uid,
+      })),
     })),
     uid: header.system.uid,
     notification_bar: {
@@ -340,6 +346,10 @@ export const getPageRes = async (entryUrl: string): Promise<Page> => {
                     }
                     body {
                       json
+                      system {
+                        uid
+                        content_type_uid
+                      }
                     }
                   }
                 }
@@ -505,7 +515,11 @@ query PageQuery($url: String!) {
 
     from_blog.featured_blogs = from_blog.featured_blogsConnection.edges.map(
       (edge: any) => {
-        return edge.node;
+        return {
+          ...edge.node,
+          uid: edge.node.system.uid,
+          _content_type_uid: edge.node.system.content_type_uid,
+        };
       }
     );
 
@@ -580,6 +594,10 @@ query BlogListQuery {
           node {
             ... on Author {
               title
+              system {
+                uid
+                content_type_uid
+              }
             }
           }
         }
@@ -606,7 +624,14 @@ query BlogListQuery {
 
   blogs.forEach((blog: any) => {
     blog.featured_image = blog.featured_imageConnection.edges[0].node;
-    blog.author = [blog.authorConnection.edges[0].node];
+    blog.author = [
+      {
+        ...blog.authorConnection.edges[0].node,
+        uid: blog.authorConnection.edges[0].node.system.uid,
+        _content_type_uid:
+          blog.authorConnection.edges[0].node.system.content_type_uid,
+      },
+    ];
     blog.uid = blog.system.uid;
   });
 
@@ -661,6 +686,10 @@ query BlogPostQuery($url: String!) {
           node {
             ... on Author {
               title
+              system {
+                uid
+                content_type_uid
+              }
             }
           }
         }
@@ -676,6 +705,10 @@ query BlogPostQuery($url: String!) {
               url
               body {
                 json
+              }
+              system {
+                uid
+                content_type_uid
               }
             }
           }
@@ -702,10 +735,20 @@ query BlogPostQuery($url: String!) {
 
   blogs.forEach((blog: any) => {
     blog.featured_image = blog.featured_imageConnection.edges[0].node;
-    blog.author = [blog.authorConnection.edges[0].node];
-    blog.related_post = blog.related_postConnection.edges.map(
-      (edge: any) => edge.node
-    );
+    blog.author = [
+      {
+        ...blog.authorConnection.edges[0].node,
+        uid: blog.authorConnection.edges[0].node.system.uid,
+        _content_type_uid:
+          blog.authorConnection.edges[0].node.system.content_type_uid,
+      },
+    ];
+    blog.related_post = blog.related_postConnection.edges.map((edge: any) => ({
+      ...edge.node,
+      // NOTE: we need `_content_type_uid` and `uid` to render data-cslp tags for referenced entries
+      uid: edge.node.system.uid,
+      _content_type_uid: edge.node.system.content_type_uid,
+    }));
     blog.uid = blog.system.uid;
   });
 
