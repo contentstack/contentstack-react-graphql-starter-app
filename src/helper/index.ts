@@ -50,19 +50,19 @@ const gqlRequest = async (
     graphqlUrl.hostname = GRAPHQL_HOST_NAME;
   }
 
-  const body: Record<string, any> = {
-    query: gql,
-  };
-
-  body.variables = options?.variables || null;
   if (options?.operationName) {
-    body.operationName = options.operationName;
+    graphqlUrl.searchParams.set("operationName", options.operationName);
   }
 
+  if (options?.variables) {
+    graphqlUrl.searchParams.set("variables", JSON.stringify(options.variables));
+  }
+
+  graphqlUrl.searchParams.set("query", gql);
+
   const res = await fetch(graphqlUrl.toString(), {
-    method: "POST",
+    method: "GET",
     headers: headers,
-    body: JSON.stringify(body),
   });
 
   return res;
