@@ -1,9 +1,7 @@
-
-import React from "react"
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { LivePreviewProvider } from "./context/live-preview-context-provider";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -11,10 +9,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <BrowserRouter>
-    <LivePreviewProvider>
-      <App />
-    </LivePreviewProvider>
-  </BrowserRouter>,
+    <App />
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

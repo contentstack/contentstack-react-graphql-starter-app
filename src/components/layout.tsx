@@ -4,7 +4,7 @@ import Header from "./header";
 import Footer from "./footer";
 import DevTools from "./devtools";
 import { getHeaderRes, getFooterRes, getAllEntries } from "../helper";
-import { onEntryChange } from "../sdk/entry";
+import { onEntryChange } from "../utils/live-preview";
 import { EntryProps } from "../typescript/components";
 import { FooterRes, HeaderRes, NavigationMenu } from "../typescript/response";
 import { Link } from "../typescript/pages";
@@ -31,9 +31,12 @@ export default function Layout({ entry }: { entry: EntryProps }) {
       const header = await getHeaderRes();
       const footer = await getFooterRes();
       const allEntry = await getAllEntries();
-      !header || (!footer && setError(true));
+
+      if (!header || !footer) setError(true);
+
       const navHeaderList = header.navigation_menu;
       const navFooterList = footer.navigation.link;
+
       if (allEntry.length !== header.navigation_menu.length) {
         allEntry.forEach((entry) => {
           const hFound = header.navigation_menu.find(
@@ -53,7 +56,7 @@ export default function Layout({ entry }: { entry: EntryProps }) {
           if (!fFound) {
             navFooterList.push({
               title: entry.title,
-              href: entry.url
+              href: entry.url,
             });
           }
         });

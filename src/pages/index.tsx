@@ -4,12 +4,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import RenderComponents from "../components/render-components";
 import { getPageRes } from "../helper";
 import Skeleton from "react-loading-skeleton";
-import { useLivePreviewCtx } from "../context/live-preview-context-provider";
 import { EntryProps } from "../typescript/components";
 import { Page } from "../typescript/pages";
+import { onEntryChange } from "../utils/live-preview";
 
-export default function Home({ entry }:{entry:({page, blogPost}:EntryProps)=> void}) {
-  const lpTs = useLivePreviewCtx();
+export default function Home({
+  entry,
+}: {
+  entry: ({ page, blogPost }: EntryProps) => void;
+}) {
   const params = useParams();
   const entryUrl = params.page ? `/${params.page}` : "/";
   const history = useNavigate();
@@ -29,14 +32,14 @@ export default function Home({ entry }:{entry:({page, blogPost}:EntryProps)=> vo
   }
 
   useEffect(() => {
-    fetchData();
+    onEntryChange(fetchData);
     error && history("/404");
-  }, [entryUrl, lpTs, error]);
+  }, [entryUrl]);
 
   return Object.keys(getEntries).length ? (
     <RenderComponents
       pageComponents={getEntries?.page_components}
-      contentTypeUid='page'
+      contentTypeUid="page"
       entryUid={getEntries?.uid}
       locale={getEntries?.locale}
     />

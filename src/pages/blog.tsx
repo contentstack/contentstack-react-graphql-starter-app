@@ -5,11 +5,15 @@ import RenderComponents from "../components/render-components";
 import BlogList from "../components/blog-list";
 import { getBlogListRes, getPageRes } from "../helper";
 import Skeleton from "react-loading-skeleton";
-import { useLivePreviewCtx } from "../context/live-preview-context-provider";
 import { BlogPostRes, Page } from "../typescript/pages";
 import { EntryProps } from "../typescript/components";
+import { onEntryChange } from "../utils/live-preview";
 
-export default function Blog({ entry }:{entry:({page, blogPost}:EntryProps)=> void}) {
+export default function Blog({
+  entry,
+}: {
+  entry: ({ page, blogPost }: EntryProps) => void;
+}) {
   const history = useNavigate();
   const [getEntry, setEntry] = useState({} as Page);
   const [getList, setList] = useState({
@@ -17,15 +21,14 @@ export default function Blog({ entry }:{entry:({page, blogPost}:EntryProps)=> vo
     list: [] as BlogPostRes[],
   });
   const [error, setError] = useState(false);
-  const lpTs = useLivePreviewCtx();
 
   async function fetchData() {
     try {
       const blog = await getPageRes("/blog");
-      const {archivedBlogs,recentBlogs} = await getBlogListRes();
+      const { archivedBlogs, recentBlogs } = await getBlogListRes();
       setEntry(blog);
       setList({ archive: archivedBlogs, list: recentBlogs });
-      const blogList = recentBlogs.concat(archivedBlogs)
+      const blogList = recentBlogs.concat(archivedBlogs);
       entry({ page: [blog], blogPost: blogList });
     } catch (error) {
       console.error(error);
@@ -34,9 +37,9 @@ export default function Blog({ entry }:{entry:({page, blogPost}:EntryProps)=> vo
   }
 
   useEffect(() => {
-    fetchData();
+    onEntryChange(fetchData);
     error && history("/404");
-  }, [error, lpTs]);
+  }, []);
 
   return (
     <>
@@ -44,15 +47,15 @@ export default function Blog({ entry }:{entry:({page, blogPost}:EntryProps)=> vo
         <RenderComponents
           pageComponents={getEntry.page_components}
           blogsPage
-          contentTypeUid='page'
+          contentTypeUid="page"
           entryUid={getEntry.uid}
           locale={getEntry.locale}
         />
       ) : (
         <Skeleton height={400} />
       )}
-      <div className='blog-container'>
-        <div className='blog-column-left'>
+      <div className="blog-container">
+        <div className="blog-column-left">
           {Object.keys(getList.list).length ? (
             getList.list.map((bloglist, index) => (
               <BlogList bloglist={bloglist} key={index} />
@@ -61,7 +64,7 @@ export default function Blog({ entry }:{entry:({page, blogPost}:EntryProps)=> vo
             <Skeleton height={400} width={400} count={3} />
           )}
         </div>
-        <div className='blog-column-right'>
+        <div className="blog-column-right">
           {Object.keys(getEntry).length &&
           getEntry.page_components[1].widget ? (
             <h2 {...(getEntry?.page_components[1].widget.$?.title_h2 as {})}>
