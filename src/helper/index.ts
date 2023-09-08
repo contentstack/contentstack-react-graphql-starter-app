@@ -613,10 +613,7 @@ query BlogListQuery {
 }
 `;
 
-  const res = await gqlRequest(query, {
-    // BUG: assets will not be fetched if operationName is not provided
-    operationName: "BlogListQuery",
-  });
+  const res = await gqlRequest(query);
 
   const data = await res.json();
 
