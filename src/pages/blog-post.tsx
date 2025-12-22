@@ -40,8 +40,11 @@ export default function BlogPost({
 
   useEffect(() => {
     onEntryChange(fetchData);
-    error && history("/404");
   }, [blogId]);
+
+  useEffect(() => {
+    if (error) history("/404");
+  }, [error, history]);
 
   const { post, banner } = getEntry;
   return (
