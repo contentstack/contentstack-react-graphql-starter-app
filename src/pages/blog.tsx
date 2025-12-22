@@ -38,8 +38,11 @@ export default function Blog({
 
   useEffect(() => {
     onEntryChange(fetchData);
-    error && history("/404");
   }, []);
+
+  useEffect(() => {
+    if (error) history("/404");
+  }, [error, history]);
 
   return (
     <>

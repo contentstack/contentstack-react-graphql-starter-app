@@ -33,8 +33,11 @@ export default function Home({
 
   useEffect(() => {
     onEntryChange(fetchData);
-    error && history("/404");
   }, [entryUrl]);
+
+  useEffect(() => {
+    if (error) history("/404");
+  }, [error, history]);
 
   return Object.keys(getEntries).length ? (
     <RenderComponents

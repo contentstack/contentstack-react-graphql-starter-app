@@ -13,10 +13,6 @@ if (!GRAPHQL_HOST_NAME || !LIVE_PREVIEW_HOST_NAME) {
   throw new Error("Please set you .env file before running starter app");
 }
 
-const graphqlUrl = new URL(
-  `https://${GRAPHQL_HOST_NAME}/stacks/${process.env.REACT_APP_CONTENTSTACK_API_KEY}?environment=${process.env.REACT_APP_CONTENTSTACK_ENVIRONMENT}`
-);
-
 const liveEdit = process.env.REACT_APP_CONTENTSTACK_LIVE_EDIT_TAGS === "true";
 
 function getHeaders() {
@@ -38,6 +34,9 @@ const gqlRequest = async (
 ) => {
   const hash = ContentstackLivePreview.hash;
   const headers = getHeaders();
+  const graphqlUrl = new URL(
+    `https://${GRAPHQL_HOST_NAME}/stacks/${process.env.REACT_APP_CONTENTSTACK_API_KEY}?environment=${process.env.REACT_APP_CONTENTSTACK_ENVIRONMENT}`
+  );
 
   if (hash) {
     headers.append("live_preview", hash);
@@ -45,9 +44,9 @@ const gqlRequest = async (
       "authorization",
       process.env.REACT_APP_CONTENTSTACK_MANAGEMENT_TOKEN as string
     );
-    graphqlUrl.hostname = LIVE_PREVIEW_HOST_NAME;
+    graphqlUrl.hostname = LIVE_PREVIEW_HOST_NAME as string;
   } else {
-    graphqlUrl.hostname = GRAPHQL_HOST_NAME;
+    graphqlUrl.hostname = GRAPHQL_HOST_NAME as string;
   }
 
   if (options?.operationName) {
@@ -118,7 +117,9 @@ query HeaderQuery {
   const res = await gqlRequest(gql);
 
   const data = await res.json();
-
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const header = data.data.all_header.items[0];
 
   const transformed = {
@@ -201,7 +202,9 @@ query FooterQuery {
   const res = await gqlRequest(gql);
 
   const data = await res.json();
-
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const footer = data.data.all_footer.items[0];
 
   const transformed = {
@@ -457,7 +460,13 @@ query PageQuery($url: String!) {
   });
 
   const data = await res.json();
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const total = data.data.all_page.total;
+  if (total === 0) {
+    throw new Error("Page not found");
+  }
   const page = data.data.all_page.items[total - 1];
 
   const final_data = {
@@ -619,7 +628,9 @@ query BlogListQuery {
   });
 
   const data = await res.json();
-
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const blogs = data.data.all_blog_post.items;
 
   blogs.forEach((blog: any) => {
@@ -730,8 +741,13 @@ query BlogPostQuery($url: String!) {
   });
 
   const data = await res.json();
-
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const blogs = data.data.all_blog_post.items;
+  if (!blogs || blogs.length === 0) {
+    throw new Error("Blog post not found");
+  }
 
   blogs.forEach((blog: any) => {
     blog.featured_image = blog.featured_imageConnection.edges[0].node;
@@ -781,6 +797,9 @@ export const getAllEntries = async (): Promise<Page[]> => {
 
   const res = await gqlRequest(query);
   const data = await res.json();
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
   const pages = data.data.all_page.items;
 
   const transformed = pages.map((page: any) => {
