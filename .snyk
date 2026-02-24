@@ -1,0 +1,20 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-REMIXRUNROUTER-14908530:
+    - '*':
+        reason: 'https://contentstack.atlassian.net/browse/IS-6640'
+        expires: 2026-03-26T12:11:01.489Z
+        created: 2026-02-24T12:11:01.491Z
+  SNYK-JS-REACTROUTER-14908286:
+    - '*':
+        reason: 'https://contentstack.atlassian.net/browse/IS-6640'
+        expires: 2026-03-26T12:11:05.962Z
+        created: 2026-02-24T12:11:05.971Z
+  SNYK-JS-REMIXRUNROUTER-14908287:
+    - '*':
+        reason: 'https://contentstack.atlassian.net/browse/IS-6640'
+        expires: 2026-03-26T12:11:10.288Z
+        created: 2026-02-24T12:11:10.295Z
+patch: {}
